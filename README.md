@@ -23,9 +23,6 @@ Crypto Currency Board demonstrates:
 ---
 
 ## Project Structure
-
-
-## Project Structure
 ```
 turtle_graphics/
 │
@@ -47,7 +44,6 @@ turtle_graphics/
 │   ├── ticker_class.py
 │   ├── graph_panel.py        # Candlestick price & volume chart
 ```
-
 
 ---
 
