@@ -31,9 +31,9 @@ turtle_graphics/
 │
 ├── README.md                          # This file
 │
-├── polygon_art.py
+├── Final_ui_design.png
 │
-├── main.py
+├── presentation.mp4
 │
 ├── requirements.txt
 │
