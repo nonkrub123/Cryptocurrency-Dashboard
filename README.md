@@ -45,6 +45,7 @@ turtle_graphics/
 │   ├── order_book.py
 │   ├── technical.py
 │   ├── ticker_class.py
+│   ├── graph_panel.py        # Candlestick price & volume chart
 ```
 
 
@@ -91,6 +92,19 @@ turtle_graphics/
 
 ⚠️ Uses REST API, so there may be a small delay compared to WebSocket streams.
 
+### ✅ Candlestick Graph Panel
+
+This panel provides a clear visual representation of short-term price action and trading volume, complementing the real-time ticker and order book views.
+- Displays 1-hour candlestick charts (recent 50 candles)
+
+- Volume bars aligned with price movement
+
+- Bullish candles shown in green, bearish candles shown in red
+
+- Automatically refreshes in the background
+
+- Resizes correctly with window scaling
+
 ---
 
 ## Architecture Overview
@@ -106,6 +120,7 @@ turtle_graphics/
 ### ✅ Thread-Safe UI Updates
 
 - WebSocket connections run in background threads
+- REST polling and graph updates run asynchronously
 - Tkinter UI updates are handled using `tk.after`
 - Prevents UI freezing and race conditions
 
@@ -117,6 +132,7 @@ The application is divided into reusable components:
 
 - Ticker display
 - Technical analysis panel
+- Candlestick graph panel
 - Order book display
 
 Each component is independent and easy to extend with new features or indicators.
@@ -185,6 +201,19 @@ Displays a snapshot of the market depth.
 - Updates data periodically using REST API
 - Manages start/stop behavior to reduce unnecessary data usage
 
+### 5. CryptoGraph
+
+**Responsibility:**
+Displays historical price action and trading volume for the selected cryptocurrency.
+
+**Details:**
+
+- Fetches OHLCV (kline) data from Binance REST API
+- Draws candlestick and volume charts using Matplotlib
+- Embeds charts directly inside Tkinter frames
+- Runs data updates in background threads
+- Uses thread-safe UI updates via tk.after
+- Starts and stops automatically based on panel visibility
 ---
 
 ## How to Run
@@ -197,7 +226,7 @@ Displays a snapshot of the market depth.
 ### Install Dependencies
 
 ```bash
-pip install websocket-client requests numpy
+pip install websocket-client requests numpy matplotlib
 ```
 
 ### Run the Application
