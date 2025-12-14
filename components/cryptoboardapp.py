@@ -6,9 +6,7 @@ import json
 from components.ticker_class import CryptoTicker
 from components.order_book import CryptoOrderBook
 from components.technical import TechinalAnalysis
-# =========================
-#  REUSABLE TICKER CLASS
-# =========================
+from components.graph_panel import CryptoGraph
 
 class CryptoBoardApp:
     def __init__(self, root):
@@ -110,11 +108,25 @@ class CryptoBoardApp:
             "ADA": CryptoOrderBook(self.order_book_frame, "adausdt", "Order Book Snapshot")
         }
 
+        # Graph FRAME
+        self.graph_frame = tk.Frame(self.bottom_frame, bg="blue")
+        self.graph_frame.grid(row=0,column=1,sticky="nsew", padx=3)
+
+        self.graph = {
+            "BTC": CryptoGraph(self.graph_frame, "btcusdt", "BTC/USDT"),
+            "ETH": CryptoGraph(self.graph_frame, "ethusdt", "ETH/USDT"),
+            "SOL": CryptoGraph(self.graph_frame, "solusdt", "SOL/USDT"),
+            "BNB": CryptoGraph(self.graph_frame, "bnbusdt", "BNB/USDT"),
+            "XRP": CryptoGraph(self.graph_frame, "xrpusdt", "XRP/USDT"),
+            "ADA": CryptoGraph(self.graph_frame, "adausdt", "ADA/USDT"),
+        }
+
         # Show BTC as default display
         self.current = None
         self.show_ticker("BTC")
         self.show_book("BTC")
         self.show_technical_analysis()
+        self.show_graph("BTC")
 
         root.protocol("WM_DELETE_WINDOW", self.on_close)
     
@@ -126,6 +138,7 @@ class CryptoBoardApp:
         self.show_ticker(name)
         self.show_book(name)
         self.show_technical_analysis()
+        self.show_graph(name)
 
         self.current = name
 
@@ -155,6 +168,13 @@ class CryptoBoardApp:
 
         self.order_book[name].show()
         self.order_book[name].start()
+
+    def show_graph(self, name):
+        for g in self.graph.values():
+            g.stop()
+            g.grid_forget()
+
+        self.graph[name].show()
 
     def on_close(self):
         for t in self.tickers.values():

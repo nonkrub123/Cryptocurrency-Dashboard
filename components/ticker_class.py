@@ -4,6 +4,7 @@ import websocket
 import threading
 import json
 from components.technical import TechinalAnalysis
+
 class CryptoTicker:
     """Reusable ticker component for any cryptocurrency."""
     
@@ -38,7 +39,7 @@ class CryptoTicker:
         self.ws = websocket.WebSocketApp(
             ws_url,
             on_message=self.on_message,
-            on_error=lambda ws, err: print(f"{self.symbol} error: {err}"),
+            on_error=self.on_error,
             on_close=lambda ws, s, m: print(f"{self.symbol} closed"),
             on_open=lambda ws: print(f"{self.symbol} connected")
         )
@@ -72,7 +73,15 @@ class CryptoTicker:
                 self.technical_analysis.on_data(highest, lowest, spread)
             except Exception as e:
                 print(f"Callback error: {e}")
+    
+    def on_error(self, ws, err):
+        if not self.is_active:
+            return
 
+        if "sock" in str(err):
+            return
+
+        print(f"{self.symbol} error:", err)
     def update_display(self, price, change, percent):
         if not self.is_active:
             return
