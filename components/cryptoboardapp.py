@@ -84,15 +84,16 @@ class CryptoBoardApp:
         # Create Order book
         self.order_book = {
             "BTC": CryptoOrderBook(self.order_book_frame, "btcusdt", "Order Book Snapshot"),
-            "ETH": CryptoOrderBook(self.order_book_frame, "btcusdt", "Order Book Snapshot"),
-            "SOL": CryptoOrderBook(self.order_book_frame, "btcusdt", "Order Book Snapshot"),
-            "BNB": CryptoOrderBook(self.order_book_frame, "btcusdt", "Order Book Snapshot"),
-            "XRP": CryptoOrderBook(self.order_book_frame, "btcusdt", "Order Book Snapshot")
+            "ETH": CryptoOrderBook(self.order_book_frame, "ethusdt", "Order Book Snapshot"),
+            "SOL": CryptoOrderBook(self.order_book_frame, "solusdt", "Order Book Snapshot"),
+            "BNB": CryptoOrderBook(self.order_book_frame, "bnbusdt", "Order Book Snapshot"),
+            "XRP": CryptoOrderBook(self.order_book_frame, "xrpusdt", "Order Book Snapshot")
         }
 
         # Show BTC as default display
         self.current = None
         self.show_ticker("BTC")
+        self.show_book("BTC")
 
         root.protocol("WM_DELETE_WINDOW", self.on_close)
     
@@ -102,7 +103,7 @@ class CryptoBoardApp:
             return
         
         self.show_ticker(name)
-        # self.show_book(name)
+        self.show_book(name)
 
         self.current = name
 
