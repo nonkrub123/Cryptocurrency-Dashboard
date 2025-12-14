@@ -5,6 +5,7 @@ import threading
 import json
 from components.ticker_class import CryptoTicker
 from components.order_book import CryptoOrderBook
+from components.technical import TechinalAnalysis
 # =========================
 #  REUSABLE TICKER CLASS
 # =========================
@@ -15,6 +16,12 @@ class CryptoBoardApp:
         self.root = root
         self.root.title("Crypto Currency Board")
         self.root.geometry("900x600")
+        # Define the minimum acceptable width and height
+        MIN_WIDTH = 600
+        MIN_HEIGHT = 500
+
+        # Set the limits
+        root.minsize(MIN_WIDTH, MIN_HEIGHT)
 
         # === ROOT GRID CONFIG ===
         self.root.columnconfigure(0, weight=1, uniform = "frame", min=20)
@@ -23,9 +30,9 @@ class CryptoBoardApp:
         self.root.rowconfigure(2, weight=15, uniform = "frame")
 
         # === FRAMES ===
-        self.top_frame = tk.Frame(root, bg='red', borderwidth=2, relief="solid", width=1, height=1)    # Top
-        self.middle_frame = tk.Frame(root, bg='blue', borderwidth=2, relief="solid")   # middle
-        self.bottom_frame = tk.Frame(root, bg='yellow', borderwidth=2, relief="solid") # Bottom
+        self.top_frame = tk.Frame(root, bg='#d2d6d5', borderwidth=2, relief="solid", width=1, height=1)    # Top
+        self.middle_frame = tk.Frame(root, bg="#ffffff", borderwidth=2, relief="solid")   # middle
+        self.bottom_frame = tk.Frame(root, bg="#d5dee9", borderwidth=2, relief="solid") # Bottom
 
         self.top_frame.grid(row=0, column=0, sticky='NSEW', padx=5, pady=2)
         self.middle_frame.grid(row=1, column=0, sticky='NSEW', padx=5, pady=2)
@@ -63,13 +70,22 @@ class CryptoBoardApp:
         self.tickers_frame.columnconfigure(0, weight=1)
         self.tickers_frame.rowconfigure(0, weight=1)
 
+        # Best bid ask spread FRAME
+        self.best_bas_frame = tk.Frame(self.middle_frame, bg="#cad5db",)
+        self.best_bas_frame.grid(row=0, column=1, sticky="nsew", padx=3)
+
+        # Create technical Analysis
+        self.technical_analysis = TechinalAnalysis(
+                self.best_bas_frame,
+                "Best bid / Ask & Spread"
+        )
         # Create tickers
         self.tickers = {
-            "BTC": CryptoTicker(self.tickers_frame, "btcusdt", "BTC/UDST"),
-            "ETH": CryptoTicker(self.tickers_frame, "ethusdt", "ETH/UDST"),
-            "SOL": CryptoTicker(self.tickers_frame, "solusdt", "SOL/UDST"),
-            "BNB": CryptoTicker(self.tickers_frame, "bnbusdt", "BNB/UDST"),
-            "XRP": CryptoTicker(self.tickers_frame, "xrpusdt", "XRP/UDST")
+            "BTC": CryptoTicker(self.tickers_frame, "btcusdt", "BTC/UDST", self.technical_analysis),
+            "ETH": CryptoTicker(self.tickers_frame, "ethusdt", "ETH/UDST", self.technical_analysis),
+            "SOL": CryptoTicker(self.tickers_frame, "solusdt", "SOL/UDST", self.technical_analysis),
+            "BNB": CryptoTicker(self.tickers_frame, "bnbusdt", "BNB/UDST", self.technical_analysis),
+            "XRP": CryptoTicker(self.tickers_frame, "xrpusdt", "XRP/UDST", self.technical_analysis)
         }
 
         # Bottom Frame
@@ -94,6 +110,7 @@ class CryptoBoardApp:
         self.current = None
         self.show_ticker("BTC")
         self.show_book("BTC")
+        self.show_technical_analysis()
 
         root.protocol("WM_DELETE_WINDOW", self.on_close)
     
@@ -104,6 +121,7 @@ class CryptoBoardApp:
         
         self.show_ticker(name)
         self.show_book(name)
+        self.show_technical_analysis()
 
         self.current = name
 
@@ -118,10 +136,14 @@ class CryptoBoardApp:
         self.tickers[name].show()
         self.tickers[name].start()
     
+    def show_technical_analysis(self):
+        self.technical_analysis.grid_forget()
+        self.technical_analysis.show()
+
     def show_book(self, name):
         if self.current == name:
             return
-        
+
         # Hidden and stop all
         for b in self.order_book.values():
             b.stop()

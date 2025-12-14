@@ -19,7 +19,7 @@ class CryptoOrderBook:
         parent.rowconfigure(0, weight = 1)
 
         # Configure frame layout by grid
-        self.frame = tk.Frame(parent, bg="gray")
+        self.frame = tk.Frame(parent, bg="white")
         self.frame.columnconfigure((0,1), weight=1, minsize=10)
         self.frame.rowconfigure(0, weight=2, minsize=10)
         self.frame.rowconfigure(1, weight=2, minsize=10)

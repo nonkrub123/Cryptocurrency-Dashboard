@@ -3,16 +3,18 @@ from tkinter import ttk
 import websocket
 import threading
 import json
+from components.technical import TechinalAnalysis
 class CryptoTicker:
     """Reusable ticker component for any cryptocurrency."""
     
-    def __init__(self, parent, symbol, display_name):
+    def __init__(self, parent, symbol, display_name, technical_analysis=None):
         self.parent = parent
         self.symbol = symbol.lower()
         self.display_name = display_name
         self.is_active = False
         self.ws = None
-        
+        self.technical_analysis = technical_analysis
+
         # Create UI inside given parent frame (middle_frame)
         self.frame = ttk.Frame(parent, relief="solid", borderwidth=1, padding=20)
         
@@ -59,7 +61,18 @@ class CryptoTicker:
         percent = float(data['P'])
         
         self.parent.after(0, self.update_display, price, change, percent)
-    
+        
+        highest = float(data['b'])
+        lowest = float(data['a'])
+        spread = highest - lowest
+
+        # Call callback if provided
+        if self.technical_analysis:
+            try:
+                self.technical_analysis.on_data(highest, lowest, spread)
+            except Exception as e:
+                print(f"Callback error: {e}")
+
     def update_display(self, price, change, percent):
         if not self.is_active:
             return
