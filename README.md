@@ -199,6 +199,8 @@ Displays a snapshot of the market depth.
 - Updates data periodically using REST API
 - Manages start/stop behavior to reduce unnecessary data usage
 
+---
+
 ### 5. CryptoGraph
 
 **Responsibility:**
@@ -224,7 +226,7 @@ Displays historical price action and trading volume for the selected cryptocurre
 ### Install Dependencies
 
 ```bash
-pip install websocket-client requests numpy matplotlib
+pip install websocket-client requests numpy matplotlib 
 ```
 
 ### Run the Application
