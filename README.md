@@ -68,6 +68,7 @@ turtle_graphics/
   - SOL
   - BNB
   - XRP
+  - ADA
 - One-click coin selection using buttons
 - Automatically switches displayed data when a new coin is selected
 

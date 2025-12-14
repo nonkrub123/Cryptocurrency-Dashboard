@@ -39,8 +39,8 @@ class CryptoBoardApp:
         self.bottom_frame.grid(row=2, column=0, sticky='NSEW', padx=5, pady=2)
 
         # TOP BUTTONS
-        self.top_frame.columnconfigure((0,1,2,3,4), weight=1, uniform="ua", minsize= 50)
-        self.top_frame.columnconfigure(5, weight=10, uniform="ua")
+        self.top_frame.columnconfigure((0,1,2,3,4,5), weight=1, uniform="ua", minsize= 50)
+        self.top_frame.columnconfigure(6, weight=10, uniform="ua")
         self.top_frame.rowconfigure(0, weight= 1,uniform="ua", minsize=30)
 
         # Widgetss
@@ -49,6 +49,7 @@ class CryptoBoardApp:
         button3 = ttk.Button(self.top_frame, text = 'SOL', command=lambda: self.show_selected("SOL"))
         button4 = ttk.Button(self.top_frame, text = 'BNB', command=lambda: self.show_selected("BNB"))
         button5 = ttk.Button(self.top_frame, text = 'XRP', command=lambda: self.show_selected("XRP"))
+        button6 = ttk.Button(self.top_frame, text = 'ADA', command=lambda: self.show_selected("ADA"))
 
         # upper frame widget
         button1.grid(row=0, column= 0, sticky="nsew")
@@ -56,6 +57,7 @@ class CryptoBoardApp:
         button3.grid(row=0, column= 2, sticky="nsew")
         button4.grid(row=0, column= 3, sticky="nsew")
         button5.grid(row=0, column= 4, sticky="nsew")
+        button6.grid(row=0, column= 5, sticky="nsew")
 
         # Middle FRAME
         self.middle_frame.columnconfigure(0, weight=3, uniform="mid", minsize=167)
@@ -85,7 +87,8 @@ class CryptoBoardApp:
             "ETH": CryptoTicker(self.tickers_frame, "ethusdt", "ETH/UDST", self.technical_analysis),
             "SOL": CryptoTicker(self.tickers_frame, "solusdt", "SOL/UDST", self.technical_analysis),
             "BNB": CryptoTicker(self.tickers_frame, "bnbusdt", "BNB/UDST", self.technical_analysis),
-            "XRP": CryptoTicker(self.tickers_frame, "xrpusdt", "XRP/UDST", self.technical_analysis)
+            "XRP": CryptoTicker(self.tickers_frame, "xrpusdt", "XRP/UDST", self.technical_analysis),
+            "ADA": CryptoTicker(self.tickers_frame, "adausdt", "ADA/UDST", self.technical_analysis)
         }
 
         # Bottom Frame
@@ -103,7 +106,8 @@ class CryptoBoardApp:
             "ETH": CryptoOrderBook(self.order_book_frame, "ethusdt", "Order Book Snapshot"),
             "SOL": CryptoOrderBook(self.order_book_frame, "solusdt", "Order Book Snapshot"),
             "BNB": CryptoOrderBook(self.order_book_frame, "bnbusdt", "Order Book Snapshot"),
-            "XRP": CryptoOrderBook(self.order_book_frame, "xrpusdt", "Order Book Snapshot")
+            "XRP": CryptoOrderBook(self.order_book_frame, "xrpusdt", "Order Book Snapshot"),
+            "ADA": CryptoOrderBook(self.order_book_frame, "adausdt", "Order Book Snapshot")
         }
 
         # Show BTC as default display
