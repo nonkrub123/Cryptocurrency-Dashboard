@@ -88,6 +88,8 @@ turtle_graphics/
 
 ⚠️ Uses REST API, so there may be a small delay compared to WebSocket streams.
 
+---
+
 ### ✅ Candlestick Graph Panel
 
 This panel provides a clear visual representation of short-term price action and trading volume, complementing the real-time ticker and order book views.
