@@ -11,6 +11,7 @@ class CryptoOrderBook:
         self.symbol = symbol.lower()
         self.display_name = display_name
         self.is_active = False
+        self.is_show = True
 
         # Create UI inside Parent frame
         # Configure parent frame by grid
@@ -46,6 +47,9 @@ class CryptoOrderBook:
         self.title_name = tk.Label(self.frame, text=display_name, bg="white", font=("arial", 16))
         self.title_name.grid(row=0, column=0,columnspan=2, sticky="nsew")
 
+        self.toggle = tk.Button(self.frame,text = 'Hide', command=lambda: self.toggle_bidask())
+        self.toggle.grid(row=0, column=1,sticky="e")
+
         self.bid_label = tk.Label(self.frame, 
                                   text="BID (Buys-Highest to lowest price)", bg="white", font=("arial", 10))
         self.bid_label.grid(row=1, column=0, sticky="nsew")
@@ -53,13 +57,52 @@ class CryptoOrderBook:
         self.ask_label = tk.Label(self.frame, 
                                   text="ASK (Sells-Highest to lowest price)", bg="white", font=("arial", 10))
         self.ask_label.grid(row=1, column=1, sticky="nsew")
+    
+    def toggle_bidask(self):
+        self.is_show = not self.is_show
 
+        if self.is_show:
+            self.show_top10(self.bid_list)
+            self.show_top10(self.ask_list)
+            self.bid_label.grid(row=1, column=0, sticky="nsew")
+            self.ask_label.grid(row=1, column=1, sticky="nsew")
+            self.show_headers()
+            self.toggle.config(text="Hide")
+            print("Book order showed")
+        else:
+            self.hide_top10(self.bid_list)
+            self.hide_top10(self.ask_list)
+            self.bid_label.grid_forget()
+            self.ask_label.grid_forget()
+            self.hide_headers()
+            self.toggle.config(text="Show")
+            print("Book order hided")
+
+    def show_top10(self, bid_list):
+        for i, row in enumerate(bid_list):
+            row["price"].grid(row=i+1, column=0, sticky="nsew", padx=2)
+            row["quantity"].grid(row=i+1, column=1, sticky="nsew", padx=2)
+    
+    def hide_top10(self, bid_list):
+        for i, row in enumerate(bid_list):
+            row["price"].grid_forget()
+            row["quantity"].grid_forget()
+    
+    def show_headers(self):
+        for i, lbl in enumerate(self.bid_header):
+            lbl.grid(row=0, column=i, sticky="nsew", padx=2)
+        for i, lbl in enumerate(self.ask_header):
+            lbl.grid(row=0, column=i, sticky="nsew", padx=2)
+
+    def hide_headers(self):
+        for lbl in self.bid_header + self.ask_header:
+            lbl.grid_forget()
 
     def init_book_txt(self, lists, parent):
         for i in range(10):
             lists.append({
-                "price": tk.Label(parent, text=f"{i}", font=("arial",10)),
-                "quantity": tk.Label(parent, text=f"{i}", font=("arial",10))
+                "price": tk.Label(parent, text=f"-", font=("arial",10)),
+                "quantity": tk.Label(parent, text=f"-", font=("arial",10))
             })
 
     def create_book_section(self, bid_frame, ask_frame, bid_list, ask_list):
@@ -69,32 +112,21 @@ class CryptoOrderBook:
             frame.columnconfigure(1, weight=1)
 
         # ----- HEADERS -----
-        tk.Label(bid_frame, text="Price", font=("arial", 10, "bold")).grid(
-            row=0, column=0, sticky="nsew", padx=2
-        )
-        tk.Label(bid_frame, text="Quantity", font=("arial", 10, "bold")).grid(
-            row=0, column=1, sticky="nsew", padx=2
-        )
-
-        tk.Label(ask_frame, text="Price", font=("arial", 10, "bold")).grid(
-            row=0, column=0, sticky="nsew", padx=2
-        )
-        tk.Label(ask_frame, text="Quantity", font=("arial", 10, "bold")).grid(
-            row=0, column=1, sticky="nsew", padx=2
-        )
-
+        self.bid_header = [
+            tk.Label(bid_frame, text="Price", font=("arial", 10, "bold")),
+            tk.Label(bid_frame, text="Quantity", font=("arial", 10, "bold"))
+        ]
+        self.ask_header = [
+        tk.Label(ask_frame, text="Price", font=("arial", 10, "bold")),
+        tk.Label(ask_frame, text="Quantity", font=("arial", 10, "bold"))
+        ]
+        self.show_headers()
+        
         # ----- DATA -----
         self.init_book_txt(bid_list, bid_frame)
         self.init_book_txt(ask_list, ask_frame)
-
-        for i, row in enumerate(bid_list):
-            row["price"].grid(row=i+1, column=0, sticky="nsew", padx=2)
-            row["quantity"].grid(row=i+1, column=1, sticky="nsew", padx=2)
-
-        for i, row in enumerate(ask_list):
-            row["price"].grid(row=i+1, column=0, sticky="nsew", padx=2)
-            row["quantity"].grid(row=i+1, column=1, sticky="nsew", padx=2)
-
+        self.show_top10(bid_list)
+        self.show_top10(ask_list)
 
     def start(self):
         if self.is_active == True:
